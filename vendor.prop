@@ -200,6 +200,12 @@ persist.camera.privapp.list=org.codeaurora.snapcam
 #sensors-hal debug
 persist.vendor.debug.sensors.hal=i
 
+# App launch prefetching (IORapd)
+ro.iorapd.enable=false
+iorapd.perfetto.enable=false
+iorapd.readahead.enable=false
+persist.device_config.runtime_native_boot.iorap_readahead_enable=false
+
 # +Bug494803,gongmingjie.wt,add,20191024,bt checklist
 # make bt mac address can repeat read/write
 persist.vendor.bluetooth.modem_nv_support=true
