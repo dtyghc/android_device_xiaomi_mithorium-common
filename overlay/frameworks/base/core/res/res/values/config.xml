@@ -69,6 +69,11 @@
          array. The brightness values must be non-negative and non-decreasing. This must be
          overridden in platform specific overlays -->
     <array name="config_autoBrightnessDisplayValuesNits">
+            
+    <bool name="config_faceAuthOnlyOnSecurityView">true</bool>
+    <!-- Whether device has dash charging support -->
+    <bool name="config_hasDashCharger">true</bool>
+
         <item>7.702998</item>
         <item>32.31226</item>
         <item>38.786167</item>
