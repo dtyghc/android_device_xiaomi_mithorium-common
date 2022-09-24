@@ -8,8 +8,6 @@ LOCAL_OVERRIDES_PACKAGES := \
     AmbientSensePrebuilt \
     arcore \
     Camera2 \
-    Chrome \
-    Chrome-Stub \
     ConnMO \
     ConnMetrics \
     DCMO \
@@ -30,7 +28,6 @@ LOCAL_OVERRIDES_PACKAGES := \
     PixelLiveWallpaperPrebuilt \
     Photos \
     PlayAutoInstallConfig \
-    PrebuiltGmail \
     RecorderPrebuilt \
     SafetyHubPrebuilt \
     SCONE \
@@ -46,9 +43,7 @@ LOCAL_OVERRIDES_PACKAGES := \
     USCCDM \
     Videos \
     VZWAPNLib \
-    VzwOmaTrigger \
-    YouTube \
-    YouTubeMusicPrebuilt
+    VzwOmaTrigger
 LOCAL_UNINSTALLABLE_MODULE := true
 LOCAL_CERTIFICATE := PRESIGNED
 LOCAL_SRC_FILES := /dev/null

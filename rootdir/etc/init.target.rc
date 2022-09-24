@@ -84,7 +84,10 @@ on early-boot
     mkdir /data/vendor/camera 0770 camera camera
 
 on late-fs
-    mount_all /vendor/etc/fstab.qcom --late
+    mount_all --late  /vendor/etc/fstab.qcom
+
+    # Enable ZRAM on boot_complete
+    swapon_all /vendor/etc/fstab.zram
 
 #start camera server as daemon
 service vendor.qcamerasvr /system/vendor/bin/mm-qcamera-daemon
