@@ -462,7 +462,10 @@ MITHORIUM_PRODUCT_PACKAGES += \
 
 # Tethering
 MITHORIUM_PRODUCT_PACKAGES += \
-    TetheringConfigOverlay
+    TetheringConfigOverlay \
+    SettingsOverlay \
+    SettingsProviderOverlay \
+    SystemUIOverlay
 
 # Vibrator
 MITHORIUM_PRODUCT_PACKAGES += \
