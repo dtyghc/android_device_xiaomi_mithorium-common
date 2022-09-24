@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 The LineageOS Project
+// Copyright (C) 2021-2022 The LineageOS Project
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -70,20 +70,8 @@ sh_binary {
 }
 
 sh_binary {
-    name: "init.qcom.sh",
-    src: "bin/init.qcom.sh",
-    vendor: true,
-}
-
-sh_binary {
     name: "init.qcom.early_boot.sh",
     src: "bin/init.qcom.early_boot.sh",
-    vendor: true,
-}
-
-sh_binary {
-    name: "init.qti.qseecomd.sh",
-    src: "bin/init.qti.qseecomd.sh",
     vendor: true,
 }
 
@@ -100,7 +88,25 @@ sh_binary {
 }
 
 sh_binary {
+    name: "init.qcom.sh",
+    src: "bin/init.qcom.sh",
+    vendor: true,
+}
+
+sh_binary {
     name: "init.qcom.usb.sh",
     src: "bin/init.qcom.usb.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.qti.dcvs.sh",
+    src: "bin/init.qti.dcvs.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.qti.qseecomd.sh",
+    src: "bin/init.qti.qseecomd.sh",
     vendor: true,
 }

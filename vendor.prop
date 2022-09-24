@@ -14,16 +14,16 @@ debug.enable.sglscale=1
 debug.sf.recomputecrop=0
 
 debug.renderengine.backend=threaded
+
 ro.surface_flinger.force_hwc_copy_for_virtual_displays=true
+ro.surface_flinger.max_frame_buffer_acquired_buffers=3
 ro.surface_flinger.max_virtual_display_dimension=4096
 
 # Radio
 persist.vendor.radio.mt_sms_ack=30
 
 af.fast_track_multiplier=1
-audio.deep_buffer.media=true
 audio.offload.min.duration.secs=30
-audio.offload.video=true
 debug.stagefright.omx_default_rank=0
 drm.service.enabled=true
 persist.backup.ntpServer=0.pool.ntp.org
@@ -199,12 +199,6 @@ persist.camera.privapp.list=org.codeaurora.snapcam
 
 #sensors-hal debug
 persist.vendor.debug.sensors.hal=i
-
-# App launch prefetching (IORapd)
-ro.iorapd.enable=false
-iorapd.perfetto.enable=false
-iorapd.readahead.enable=false
-persist.device_config.runtime_native_boot.iorap_readahead_enable=false
 
 # +Bug494803,gongmingjie.wt,add,20191024,bt checklist
 # make bt mac address can repeat read/write

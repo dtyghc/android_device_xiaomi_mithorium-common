@@ -14,19 +14,8 @@ GNSS_CFLAGS = [
     "-Wno-error=tautological-compare",
     "-Wno-error=switch",
     "-Wno-error=date-time",
+    "-Wno-error=enum-compare",
 ]
-
-/* Activate the following for regression testing */
-GNSS_SANITIZE = {
-/*  address: true,*/
-    cfi: true,
-    misc_undefined: [
-        "bounds",
-        "null",
-        "unreachable",
-        "integer",
-    ],
-}
 
 /* Activate the following for debug purposes only,
    comment out for production */

@@ -16,9 +16,6 @@
 # Device nodes
 /dev/stune(/.*)?	u:object_r:cgroup:s0
 
-# Charger
-/(vendor|system/vendor)/res/charger(/.*)?	u:object_r:vendor_charger_res:s0
-
 # Firmware
 /firmware                                                     u:object_r:firmware_file:s0
 /bt_firmware                                                  u:object_r:bt_firmware_file:s0
@@ -28,6 +25,7 @@
 
 # HALs
 /(vendor|system/vendor)/bin/hw/android\.hardware\.lights-service\.xiaomi_mithorium      u:object_r:hal_light_default_exec:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.thermal@2\.0-service\.qti\.xiaomi_mithorium	u:object_r:hal_thermal_default_exec:s0
 
 # Input devices
 /(vendor|system/vendor)/usr/idc(/.*)?                         u:object_r:vendor_idc_file:s0

@@ -39,7 +39,7 @@ on fs
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
     write /proc/sys/vm/swappiness 100
 
-    mount_all /vendor/etc/fstab.qcom
+    mount_all /vendor/etc/fstab.qcom --early
     chown root system /mnt/vendor/persist
     chmod 0771 /mnt/vendor/persist
     mkdir /mnt/vendor/persist/data 0700 system system
@@ -64,6 +64,7 @@ on post-fs-data
     mkdir /tombstones/dsps 0771 system system
     mkdir /persist/data/sfs 0700 system system
     mkdir /persist/data/tz 0700 system system
+    mkdir /data/vendor/hbtp 0750 system system
     mkdir /data/misc/dts 0770 media audio
 
 on early-boot
@@ -82,6 +83,9 @@ on early-boot
 #Create folder for mm-qcamera-daemon
     mkdir /data/vendor/camera 0770 camera camera
 
+on late-fs
+    mount_all /vendor/etc/fstab.qcom --late
+
 #start camera server as daemon
 service vendor.qcamerasvr /system/vendor/bin/mm-qcamera-daemon
     class late_start
@@ -97,18 +101,8 @@ service vendor.qseecomd /vendor/bin/qseecomd
    user root
    group root
 
-service thermal-engine /system/vendor/bin/thermal-engine
-   class main
-   user root
-   socket thermal-send-client stream 0666 system system
-   socket thermal-recv-client stream 0660 system system
-   socket thermal-recv-passive-client stream 0666 system system
-   socket thermal-send-rule stream 0660 system system
-   group root
-
 on boot
     start rmt_storage
-    insmod /system/lib/modules/adsprpc.ko
     # enable sched boost in order to schedule tasks on perf cluster
     write /proc/sys/kernel/sched_boost 1
 
@@ -142,6 +136,16 @@ service vendor-sensor-sh /vendor/bin/init.qcom.sensors.sh
     user root
     oneshot
 
+service dcvs-sh /vendor/bin/init.qti.dcvs.sh
+    class late_start
+    user root
+    group root system
+    disabled
+    oneshot
+
+on property:vendor.dcvs.prop=1
+   start dcvs-sh
+
 service ppd /system/vendor/bin/mm-pp-dpps
     class late_start
     disabled
@@ -174,9 +178,6 @@ on charger
     start qcom-post-boot
     setprop persist.sys.usb.config mass_storage
     start vendor.hvdcp_opti
-
-on property:init.svc.dts_configurator=stopped
-    start dtseagleservice
 
 service vendor.per_mgr /system/vendor/bin/pm-service
     class core

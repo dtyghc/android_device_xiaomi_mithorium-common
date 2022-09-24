@@ -31,6 +31,7 @@
 #define LOG_TAG "LocSvc_GnssAPIClient"
 #define SINGLE_SHOT_MIN_TRACKING_INTERVAL_MSEC (590 * 60 * 60 * 1000) // 590 hours
 
+#include <inttypes.h>
 #include <log_util.h>
 #include <loc_cfg.h>
 
@@ -299,7 +300,7 @@ void GnssAPIClient::requestCapabilities() {
 // callbacks
 void GnssAPIClient::onCapabilitiesCb(LocationCapabilitiesMask capabilitiesMask)
 {
-    LOC_LOGD("%s]: (%02x)", __FUNCTION__, capabilitiesMask);
+    LOC_LOGD("%s]: (%" PRIu64 ")", __FUNCTION__, capabilitiesMask);
     mLocationCapabilitiesMask = capabilitiesMask;
     mLocationCapabilitiesCached = true;
 
@@ -445,7 +446,7 @@ void GnssAPIClient::onGnssNiCb(uint32_t id, GnssNiNotification gnssNiNotificatio
 
 void GnssAPIClient::onGnssSvCb(GnssSvNotification gnssSvNotification)
 {
-    LOC_LOGD("%s]: (count: %zu)", __FUNCTION__, gnssSvNotification.count);
+    LOC_LOGD("%s]: (count: %u)", __FUNCTION__, gnssSvNotification.count);
     mMutex.lock();
     auto gnssCbIface(mGnssCbIface);
     mMutex.unlock();
@@ -478,7 +479,7 @@ void GnssAPIClient::onGnssNmeaCb(GnssNmeaNotification gnssNmeaNotification)
             auto r = gnssCbIface->gnssNmeaCb(
                     static_cast<V1_0::GnssUtcTime>(gnssNmeaNotification.timestamp), nmeaString);
             if (!r.isOk()) {
-                LOC_LOGE("%s] Error from gnssNmeaCb nmea=%s length=%zu description=%s", __func__,
+                LOC_LOGE("%s] Error from gnssNmeaCb nmea=%s length=%u description=%s", __func__,
                             gnssNmeaNotification.nmea, gnssNmeaNotification.length,
                             r.description().c_str());
             }

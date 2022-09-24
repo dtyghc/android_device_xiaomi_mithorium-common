@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017-2021 The LineageOS Project
+# Copyright (C) 2017-2022 The LineageOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -26,14 +26,19 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 # Kernel
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci loop.max_part=7
-BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200,n8 androidboot.console=ttyMSM0 earlycon=msm_serial_dm,0x78af000
-BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true
+BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true androidboot.init_fatal_reboot_target=recovery
+BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200,n8 androidboot.console=ttyMSM0
+ifeq ($(TARGET_BOARD_PLATFORM),msm8953)
+    ifeq ($(TARGET_KERNEL_VERSION),4.9)
+        BOARD_KERNEL_CMDLINE += earlycon=msm_serial_dm,0x78af000
+    else ifeq ($(TARGET_KERNEL_VERSION),4.19)
+        BOARD_KERNEL_CMDLINE += earlycon=msm_hsl_uart,0x78af000
+    endif
+endif
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE :=  2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
-TARGET_KERNEL_VERSION := 4.9
 TARGET_KERNEL_ADDITIONAL_FLAGS := LLVM=1
-TARGET_KERNEL_CLANG_COMPILE := true
 
 # ANT
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
@@ -68,38 +73,38 @@ AUDIO_FEATURE_ENABLED_SVA_MULTI_STAGE := true
 AUDIO_FEATURE_ENABLED_DLKM := false
 
 # Bootloader
-ifeq ($(TARGET_BOARD_PLATFORM),msm8953)
-TARGET_BOOTLOADER_BOARD_NAME := MSM8953
-else
-TARGET_BOOTLOADER_BOARD_NAME := MSM8937
-endif
+TARGET_BOOTLOADER_BOARD_NAME := $(TARGET_BOARD_PLATFORM)
 TARGET_NO_BOOTLOADER := true
 
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(COMMON_PATH)/bluetooth
 
 # Camera
-USE_DEVICE_SPECIFIC_CAMERA := true
-TARGET_USES_QTI_CAMERA_DEVICE := true
 BOARD_QTI_CAMERA_32BIT_ONLY := true
 TARGET_TS_MAKEUP := true
+TARGET_USES_QTI_CAMERA_DEVICE := true
+USE_DEVICE_SPECIFIC_CAMERA := true
 
 # Display
-TARGET_USES_ION := true
 TARGET_USES_GRALLOC1 := true
 TARGET_USES_HWC2 := true
-OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
+TARGET_USES_ION := true
+
+ifeq ($(TARGET_KERNEL_VERSION),4.19)
+TARGET_USES_GRALLOC4 := true
+TARGET_USES_QTI_MAPPER_2_0 := true
+TARGET_USES_QTI_MAPPER_EXTENSIONS_1_1 := true
+endif
 
 # DRM
 TARGET_ENABLE_MEDIADRM_64 := true
 
 # FM
 BOARD_HAVE_QCOM_FM := true
-TARGET_QCOM_NO_FM_FIRMWARE := true
 
 # GPS
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := default
-LOC_HIDL_VERSION := 4.0
+LOC_HIDL_VERSION := 4.1
 
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
@@ -108,12 +113,14 @@ TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
 BOARD_SHIPPING_API_LEVEL := 30
 
 # HIDL
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
+    $(COMMON_PATH)/framework_compatibility_matrix.xml \
+    vendor/evolution/config/device_framework_matrix.xml
+DEVICE_FRAMEWORK_MANIFEST_FILE := $(COMMON_PATH)/framework_manifest.xml
 DEVICE_MANIFEST_FILE := $(COMMON_PATH)/manifest.xml
+DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_k$(TARGET_KERNEL_VERSION).xml
 ifneq ($(TARGET_HAS_NO_CONSUMERIR),true)
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/configs/manifest/consumerir.xml
-endif
-ifneq ($(TARGET_EXCLUDE_CRYPTFSHW),true)
-DEVICE_MANIFEST_FILE += $(COMMON_PATH)/configs/manifest/cryptfshw.xml
 endif
 ifneq ($(TARGET_USES_DEVICE_SPECIFIC_GATEKEEPER),true)
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/configs/manifest/gatekeeper.xml
@@ -123,19 +130,14 @@ DEVICE_MANIFEST_FILE += $(COMMON_PATH)/configs/manifest/keymaster.xml
 endif
 DEVICE_MATRIX_FILE := $(COMMON_PATH)/compatibility_matrix.xml
 
-# HW crypto
-ifneq ($(TARGET_EXCLUDE_CRYPTFSHW),true)
-TARGET_HW_DISK_ENCRYPTION := true
-endif
-
 # Init
 TARGET_INIT_VENDOR_LIB ?= //$(COMMON_PATH):init_xiaomi_mithorium
 TARGET_RECOVERY_DEVICE_MODULES ?= init_xiaomi_mithorium
 
 # Partitions
 TARGET_COPY_OUT_VENDOR := vendor
-BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
 BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
+BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
 BOARD_ROOT_EXTRA_SYMLINKS := \
     /vendor/dsp:/dsp \
     /vendor/firmware_mnt:/firmware \
@@ -149,13 +151,22 @@ TARGET_USES_INTERACTION_BOOST := true
 
 # Platform
 BOARD_USES_QCOM_HARDWARE := true
+ifeq ($(USE_MITHORIUM_HALS),true)
+QCOM_SOONG_NAMESPACE := hardware/mithorium-$(TARGET_KERNEL_VERSION)
+else
 TARGET_ENFORCES_QSSI := true
+endif
 
 # Properties
 TARGET_ODM_PROP += $(COMMON_PATH)/odm.prop
+TARGET_PRODUCT_PROP += $(COMMON_PATH)/product.prop
 TARGET_SYSTEM_PROP += $(COMMON_PATH)/system.prop
 TARGET_SYSTEM_EXT_PROP += $(COMMON_PATH)/system_ext.prop
 TARGET_VENDOR_PROP += $(COMMON_PATH)/vendor.prop
+
+ifeq ($(TARGET_KERNEL_VERSION),4.19)
+TARGET_VENDOR_PROP += $(COMMON_PATH)/vendor_k4.19.prop
+endif
 
 # Recovery
 TARGET_USERIMAGES_USE_F2FS := true

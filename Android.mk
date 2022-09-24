@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017-2021 The LineageOS Project
+# Copyright (C) 2017-2022 The LineageOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -8,7 +8,7 @@ LOCAL_PATH := $(call my-dir)
 
 # Wanna decommonize trees for better stability or performance?
 # Just moving stuff among trees won't make any difference, lol
-ifneq ($(filter Mi8937 Mi439 Tiare oxygen uter vince,$(TARGET_DEVICE)),)
+ifneq ($(filter MiThoriumSSI Mi8937 Mi439 Mi439_4_19 Tiare oxygen uter vince onc,$(TARGET_DEVICE)),)
 
 include $(call all-makefiles-under,$(LOCAL_PATH))
 
@@ -104,7 +104,7 @@ $(WCNSS_DAT_SYMLINK): $(LOCAL_INSTALLED_MODULE)
 ALL_DEFAULT_INSTALLED_MODULES += $(WCNSS_BIN_SYMLINK) $(WCNSS_DAT_SYMLINK)
 endif
 
-ifneq ($(TARGET_DEVICE),Mi439)
+ifeq ($(filter Mi439 Mi439_4_19,$(TARGET_DEVICE)),)
 WCNSS_MAC_SYMLINK := $(TARGET_OUT_VENDOR)/firmware/wlan/prima/wlan_mac.bin
 $(WCNSS_MAC_SYMLINK): $(LOCAL_INSTALLED_MODULE)
 	@echo "WCNSS MAC bin link: $@"
@@ -135,5 +135,13 @@ $(ST_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(ST_SYMLINKS)
 endif
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := mithorium_product_packages
+LOCAL_MODULE_CLASS := FAKE
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_PATH := $(TARGET_OUT_FAKE)
+LOCAL_REQUIRED_MODULES := $(MITHORIUM_PRODUCT_PACKAGES)
+include $(BUILD_PHONY_PACKAGE)
 
 endif
