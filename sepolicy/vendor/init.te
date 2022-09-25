@@ -8,3 +8,7 @@ allow init firmware_file:filesystem getattr;
 
 # LED
 allow init sysfs_leds:lnk_file r_file_perms;
+
+#Dolby
+allow init vendor_data_file:file lock;
+allow init hal_audio_default:binder call;

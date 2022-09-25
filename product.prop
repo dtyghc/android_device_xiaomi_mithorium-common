@@ -26,3 +26,6 @@ bluetooth.profile.pan.nap.enabled?=true
 bluetooth.profile.pan.panu.enabled?=true
 bluetooth.profile.pbap.server.enabled?=true
 bluetooth.profile.sap.server.enabled?=true
+# Audio (Dolby)
+debug.stagefright.omx_default_rank.sw-audio=16
+ro.control_privapp_permissions=log

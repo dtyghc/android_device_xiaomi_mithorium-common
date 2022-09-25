@@ -6,3 +6,5 @@ vendor_public_prop(dirac_prop);
 
 # Xiaomi
 vendor_public_prop(vendor_xiaomi_prop);
+
+type vendor_dolby_loglevel_prop, property_type;
