@@ -1,5 +1,6 @@
 binder_call(hal_dms_client, hal_dms_server)
 binder_call(hal_dms_server, hal_dms_client)
+type hal_dms_server;
 
 add_hwservice(hal_dms_server, hal_dms_hwservice)
 allow hal_dms_client hal_dms_hwservice:hwservice_manager find;
